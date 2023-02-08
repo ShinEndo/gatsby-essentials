@@ -1,6 +1,6 @@
 import * as React from "react";
-import { graphql } from "gatsby";
-import Img from "gatsby-image";
+import { graphql, Link } from "gatsby";
+import { GatsbyImage } from "gatsby-plugin-image";
 import Layout from "../components/Layout";
 import SEO from "../components/SEO";
 
@@ -10,8 +10,8 @@ export default function Home({ data }) {
       <SEO />
       <section className="hero">
         <figure>
-          <Img
-            fluid={data.hero.childImageSharp.fluid}
+          <GatsbyImage
+            image={data.hero.childImageSharp.gatsbyImageData}
             alt=""
             style={{ height: "100%" }}
           />
@@ -45,7 +45,10 @@ export default function Home({ data }) {
           <div className="details">
             <div className="detail">
               <figure>
-                <Img fluid={data.fruit.childImageSharp.fluid} alt="" />
+                <GatsbyImage
+                  image={data.fruit.childImageSharp.gatsbyImageData}
+                  alt=""
+                />
               </figure>
               <h3>フルーツ</h3>
               <p>FRUIT</p>
@@ -57,7 +60,10 @@ export default function Home({ data }) {
             </div>
             <div className="detail">
               <figure>
-                <Img fluid={data.grain.childImageSharp.fluid} alt="" />
+                <GatsbyImage
+                  image={data.grain.childImageSharp.gatsbyImageData}
+                  alt=""
+                />
               </figure>
               <h3>穀物</h3>
               <p>GRAIN</p>
@@ -69,7 +75,10 @@ export default function Home({ data }) {
             </div>
             <div className="detail">
               <figure>
-                <Img fluid={data.beverage.childImageSharp.fluid} alt="" />
+                <GatsbyImage
+                  image={data.beverage.childImageSharp.gatsbyImageData}
+                  alt=""
+                />
               </figure>
               <h3>飲み物</h3>
               <p>BEVERAGE</p>
@@ -85,59 +94,85 @@ export default function Home({ data }) {
       <section className="photo">
         <h2 className="sr-only">Photo</h2>
         <figure>
-          <Img
-            fluid={data.berry.childImageSharp.fluid}
-            alt="赤く熟したベリー"
+          <GatsbyImage
+            image={data.berry.childImageSharp.gatsbyImageData}
+            alt=""
             style={{ height: "100%" }}
           />
         </figure>
+      </section>
+      <section>
+        <div className="container">
+          <h2 className="sr-only">RECENT POSTS</h2>
+          <div className="posts">
+            {data.allContentfulBlogPost.edges.map(({ node }) => (
+              <article className="post" key={node.id}>
+                <Link to={`/blog/post/${node.slug}`}>
+                  <figure>
+                    <GatsbyImage
+                      image={node.eyecatch.gatsbyImageData}
+                      alt={node.eyecatch.description}
+                      style={{ height: "100%" }}
+                    />
+                  </figure>
+                  <h3>{node.title}</h3>
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
     </Layout>
   );
 }
 
 export const query = graphql`
-  query {
+  query ($limit: Int = 4, $skip: Int = 0) {
     hero: file(relativePath: { eq: "hero.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 1600) {
-          ...GatsbyImageSharpFluid_withWebp
+        gatsbyImageData(layout: FULL_WIDTH)
+      }
+    }
+    allContentfulBlogPost(
+      sort: { publishDate: DESC }
+      limit: $limit
+      skip: $skip
+    ) {
+      edges {
+        node {
+          title
+          id
+          slug
+          eyecatch {
+            gatsbyImageData(width: 573, layout: CONSTRAINED)
+            description
+          }
         }
       }
     }
     fruit: file(relativePath: { eq: "fruit.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 320) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(width: 320, layout: CONSTRAINED)
       }
     }
     grain: file(relativePath: { eq: "grain.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 320) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(width: 320, layout: CONSTRAINED)
       }
     }
     beverage: file(relativePath: { eq: "beverage.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 320) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(width: 320, layout: CONSTRAINED)
       }
     }
     berry: file(relativePath: { eq: "berry.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 1600) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(layout: FULL_WIDTH)
       }
     }
     pattern: file(relativePath: { eq: "pattern.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 1920, quality: 90) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(quality: 90, layout: FULL_WIDTH)
       }
     }
   }

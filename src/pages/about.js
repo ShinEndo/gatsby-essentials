@@ -1,6 +1,6 @@
 import * as React from "react";
 import { graphql } from "gatsby";
-import Img from "gatsby-image";
+import { GatsbyImage } from "gatsby-plugin-image";
 import Layout from "../components/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUtensils, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
@@ -19,9 +19,10 @@ export default function About({ data, location }) {
       />
       <div className="eyecatch">
         <figure>
-          <Img
-            fluid={data.about.childImageSharp.fluid}
+          <GatsbyImage
+            image={data.about.childImageSharp.gatsbyImageData}
             alt="ブルーベリー＆ヨーグルト"
+            style={{ height: "100%" }}
           />
         </figure>
       </div>
@@ -80,9 +81,7 @@ export const query = graphql`
   query {
     about: file(relativePath: { eq: "about.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 1600) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(layout: FULL_WIDTH)
         original {
           src
           height
