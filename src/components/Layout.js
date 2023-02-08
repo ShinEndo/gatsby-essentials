@@ -6,7 +6,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
-const LAyout = ({ children }) => {
+const Layout = ({ children }) => {
   return (
     <div>
       <Header />
@@ -16,4 +16,4 @@ const LAyout = ({ children }) => {
   );
 };
 
-export default LAyout;
+export default Layout;
